@@ -1,12 +1,17 @@
 public class Jogador {
-        private String nome = "0";
-        private String data = "0";
-        private String posicao = "0";
-        private String pais = "0";
-        private float altura = 0;
-        private float peso = 0;
+        private String nome;
+        private String data;
+        private String posicao;
+        private String pais;
+        private float altura;
+        private float peso;
 
-        public void IniciaFig(String n,String d, String p, String pa, float a, float pe){
+        public Jogador(){
+            altura = 0;
+            peso = 0;
+        }
+
+        public void iniciafig(String n,String d, String p, String pa, float a, float pe){
             nome = n;
             data = d;
             posicao = p;
