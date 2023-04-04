@@ -1,6 +1,7 @@
 public class AlbumDeFigurinhas {
 
     public static void main(String args[]){
+        
         Jogador jog1 = new Jogador();
         jog1.iniciafig("João","26_02_2003","Atacante","Brasil",1.72f,60);
 
