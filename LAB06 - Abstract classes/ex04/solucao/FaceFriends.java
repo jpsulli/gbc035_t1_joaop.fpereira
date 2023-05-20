@@ -43,6 +43,7 @@ public class FaceFriends {
                     break;
                 }
                 case 2: {
+                    System.out.println("\n<<< TODOS OS CONTATOS >>>\n");
                     for (int i = 0; i < qtd; i++) {
                         if (contato[i] != null) {
                             if (contato[i] instanceof Familia) {
@@ -61,35 +62,43 @@ public class FaceFriends {
                     break;
                 }
                 case 3: {
+                    System.out.println("\n<<< FAMILIA >>>\n");
                     for (int i = 0; i < qtd; i++) {
                         if (contato[i] != null) {
                             if (contato[i] instanceof Familia) {
                                 ((Familia) contato[i]).imprimirContato();
+                                System.out.println();
                             }
                         }
                     }
+                    break;
                 }
                 case 4: {
+                    System.out.println("\n<<< AMIGOS >>>\n");
                     for (int i = 0; i < qtd; i++) {
                         if (contato[i] != null) {
                             if (contato[i] instanceof Amigo) {
                                 ((Amigo) contato[i]).imprimirContato();
+                                System.out.println();
                             }
                         }
                     }
                     break;
                 }
                 case 5: {
+                    System.out.println("\n<<< COLEGAS DE TRABALHO >>>\n");
                     for (int i = 0; i < qtd; i++) {
                         if (contato[i] != null) {
                             if (contato[i] instanceof Trabalho) {
                                 ((Trabalho) contato[i]).imprimirContato();
+                                System.out.println();
                             }
                         }
                     }
                     break;
                 }
                 case 6: {
+                    System.out.println("\n<<< IRMAOS, MELHORES AMIGOS E COLEGAS DE TRABALHO >>>\n");
                     for (int i = 0; i < qtd; i++) {
                         if (contato[i] != null) {
                             if (contato[i] instanceof Familia) {
@@ -127,7 +136,7 @@ public class FaceFriends {
 
                             if(op3 >= 1 && op3 <= qtd){
                                 condicao = true;
-                                if (contato[op3] instanceof Familia) {
+                                if (contato[op3-1] instanceof Familia) {
                                     ((Familia) contato[op3-1]).imprimirContato();
                                     System.out.println();
                                 } else if (contato[op3-1] instanceof Amigo) {
@@ -138,6 +147,7 @@ public class FaceFriends {
                                     System.out.println();
                                 }
                             }
+                            else System.out.println("Erro: digite um contato valido");
                         } while (condicao != true);
                     }
                 }
