@@ -1,0 +1,9 @@
+
+r	java:S116"XRename this field "teto_salarial" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Õ“óïşÿÿÿÿ
+h	java:S100%"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(šãÅ®şÿÿÿÿ
+c	java:S100("NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¤şÊ·
+S	java:S1067"9Replace this use of System.out or System.err by a logger.(±õøøÿÿÿÿ
+S	java:S1068"9Replace this use of System.out or System.err by a logger.(õµ¤§şÿÿÿÿ
+S	java:S1069"9Replace this use of System.out or System.err by a logger.(°ô™Ïùÿÿÿÿ
+N	java:S106:"9Replace this use of System.out or System.err by a logger.(Ä¨ûÌ
+N	java:S106;"9Replace this use of System.out or System.err by a logger.(Ò‡å

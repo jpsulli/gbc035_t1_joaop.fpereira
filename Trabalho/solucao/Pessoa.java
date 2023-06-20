@@ -1,4 +1,6 @@
-        public abstract class Pessoa {
+import java.io.Serializable;
+
+public abstract class Pessoa implements Serializable {
         protected String CPF;
         protected String nome;
         protected Endereco endereco;

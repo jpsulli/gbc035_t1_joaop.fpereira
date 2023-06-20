@@ -1,0 +1,13 @@
+
+B
+Classificador.java,3\3\335aea95f68f4b5c86b768124e823ff91de0394d
+<
+Cliente.java,9\f\9fb51e5dbdfc04867f511a4802fd336f685fbec4
+<
+Produto.java,4\c\4c5c4c50f15968d8c282324624fee1115150bf42
+<
+Servico.java,7\9\79317f311c8693fa5473f06f41d34726e35944bb
+9
+	Main.java,6\9\69cdb079609ed3ce1e356d44cff508330a5787c4
+B
+Classificavel.java,2\c\2c08528adc269652634ecf882730420d1b9d07b2

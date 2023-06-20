@@ -3,12 +3,11 @@ import java.time.format.DateTimeFormatter;
 public class Gerente extends Funcionario
 {
     private LocalDateTime dataingresso_gerencia;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");;
     private Agencia agencia;
-    private boolean curso_basico;
+    private String curso_basico;
     static float comissao;
 
-    public Gerente(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, int numCarteiraTrabalho, String rg, String sexo, String cargo, float salario, Agencia agencia, boolean curso_basico, float comissao)
+    public Gerente(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, String numCarteiraTrabalho, String rg, String sexo, String cargo, float salario, Agencia agencia, String curso_basico, float comissao)
     {
         super(CPF,nome,endereco,estadoCivil,dataNascimento,numCarteiraTrabalho,rg,sexo,cargo, salario);
         this.dataingresso_gerencia = dataingresso_gerencia.now();
@@ -18,7 +17,7 @@ public class Gerente extends Funcionario
         calculaSalario(salario, comissao);
     }
 
-    public Gerente(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, int numCarteiraTrabalho, String rg, String sexo, String cargo, float salario, boolean curso_basico, float comissao)
+    public Gerente(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, String numCarteiraTrabalho, String rg, String sexo, String cargo, float salario, String curso_basico, float comissao)
     {
         super(CPF,nome,endereco,estadoCivil,dataNascimento,numCarteiraTrabalho,rg,sexo,cargo, salario);
         this.dataingresso_gerencia = dataingresso_gerencia.now();
@@ -29,13 +28,14 @@ public class Gerente extends Funcionario
     }
 
     public String getDataingresso_gerencia() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String data = dataIngresso.format(formatter);
         return data;
     }
     public Agencia getAgencia() {
         return agencia;
     }
-    public boolean getCurso_basico() {
+    public String getCurso_basico() {
         return curso_basico;
     }
 
@@ -53,7 +53,7 @@ public class Gerente extends Funcionario
             agencia.setGerente(this);
         }
     }
-    public void setCurso_basico(boolean curso_basico) {
+    public void setCurso_basico(String curso_basico) {
         this.curso_basico = curso_basico;
     }
     public static void setComissao(float comissao) {

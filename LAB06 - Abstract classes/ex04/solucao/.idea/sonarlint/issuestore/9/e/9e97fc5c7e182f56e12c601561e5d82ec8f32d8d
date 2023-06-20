@@ -1,0 +1,77 @@
+
+J
+java:S1066D"/Merge this if statement with the enclosing one.(…½Áûÿÿÿÿ
+E
+java:S1066P"/Merge this if statement with the enclosing one.(—˜›Í
+J
+java:S1066\"/Merge this if statement with the enclosing one.(¹µÀªùÿÿÿÿ
+E
+java:S1066t"/Merge this if statement with the enclosing one.(â¹¨
+i
+java:S3776"SRefactor this method to reduce its Cognitive Complexity from 114 to the 15 allowed.(Çµí‘
+V
+java:S1659"@Declare "op2" and all following declarations on a separate line.(€•ÀŒ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(ºõ¡ı
+H
+java:S6126"2Replace this String concatenation with Text block.(ºõ¡ı
+<	java:S131""Add a default case to this switch.(õÙÆ‚úÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(å°ğö
+S	java:S106"9Replace this use of System.out or System.err by a logger.(½¿­Ëøÿÿÿÿ
+N	java:S106"9Replace this use of System.out or System.err by a logger.(Ô˜¾½
+S	java:S106"9Replace this use of System.out or System.err by a logger.(Ïù§·ûÿÿÿÿ
+N	java:S106*"9Replace this use of System.out or System.err by a logger.(ô÷÷Í
+N	java:S106."9Replace this use of System.out or System.err by a logger.(¤³¤­
+c
+java:S62011"HReplace this instanceof check and cast with 'instanceof Familia familia'(…½Áûÿÿÿÿ
+S	java:S1063"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+Y
+java:S62015"DReplace this instanceof check and cast with 'instanceof Amigo amigo'(¡¡²5
+S	java:S1067"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+e
+java:S62018"JReplace this instanceof check and cast with 'instanceof Trabalho trabalho'(‘ô¤¬úÿÿÿÿ
+S	java:S106:"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+S	java:S106A"9Replace this use of System.out or System.err by a logger.(¢“¡Ãøÿÿÿÿ
+c
+java:S6201D"HReplace this instanceof check and cast with 'instanceof Familia familia'(…½Áûÿÿÿÿ
+S	java:S106F"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+S	java:S106M"9Replace this use of System.out or System.err by a logger.(ÀÒ¼Äøÿÿÿÿ
+Z
+java:S6201P"DReplace this instanceof check and cast with 'instanceof Amigo amigo'(—˜›Í
+S	java:S106R"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+N	java:S106Y"9Replace this use of System.out or System.err by a logger.(Ùåş„
+e
+java:S6201\"JReplace this instanceof check and cast with 'instanceof Trabalho trabalho'(¹µÀªùÿÿÿÿ
+S	java:S106^"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+M	java:S106e"9Replace this use of System.out or System.err by a logger.(í­`
+c
+java:S6201h"HReplace this instanceof check and cast with 'instanceof Familia familia'(…½Áûÿÿÿÿ
+c
+java:S6201h"HReplace this instanceof check and cast with 'instanceof Familia familia'(…½Áûÿÿÿÿ
+S	java:S106k"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+Y
+java:S6201m"DReplace this instanceof check and cast with 'instanceof Amigo amigo'(¡¡²5
+Y
+java:S6201m"DReplace this instanceof check and cast with 'instanceof Amigo amigo'(¡¡²5
+S	java:S106p"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+e
+java:S6201s"JReplace this instanceof check and cast with 'instanceof Trabalho trabalho'(‹êåÎøÿÿÿÿ
+e
+java:S6201s"JReplace this instanceof check and cast with 'instanceof Trabalho trabalho'(‹êåÎøÿÿÿÿ
+S	java:S106v"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+S	java:S106"9Replace this use of System.out or System.err by a logger.(›×åüÿÿÿÿ
+T	java:S106"9Replace this use of System.out or System.err by a logger.(£ö‹Îúÿÿÿÿ
+M	java:S106„"9Replace this use of System.out or System.err by a logger.(¥Õ"
+_
+java:S6201‹"HReplace this instanceof check and cast with 'instanceof Familia familia'(£Š®Ä
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+`
+java:S6201"DReplace this instanceof check and cast with 'instanceof Amigo amigo'(õ¹Âºúÿÿÿÿ
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+f
+java:S6201‘"JReplace this instanceof check and cast with 'instanceof Trabalho trabalho'(üò©Çıÿÿÿÿ
+T	java:S106“"9Replace this use of System.out or System.err by a logger.(ªÓ¼áşÿÿÿÿ
+O	java:S106–"9Replace this use of System.out or System.err by a logger.(‘£É›
+C
+java:S1125—"'Remove the unnecessary boolean literal.(ÅÛ¢‹øÿÿÿÿ
+İ
+java:S6541"ÆA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 146 to 64, Complexity from 41 to 14, Nesting Level from 6 to 2, Number of Variables from 13 to 6.(Çµí‘

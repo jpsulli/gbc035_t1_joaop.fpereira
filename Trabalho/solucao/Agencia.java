@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Agencia {
+public class Agencia implements Serializable{
     protected int numero;
     protected Endereco endereco;
     protected Gerente gerente;

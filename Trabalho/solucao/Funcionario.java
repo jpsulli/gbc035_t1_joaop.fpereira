@@ -3,15 +3,14 @@ import java.util.Date;
 import java.time.format.DateTimeFormatter;
 
 public class Funcionario extends Pessoa{
-    protected int numCarteiraTrabalho;
+    protected String numCarteiraTrabalho;
     protected String rg;
     protected String sexo;
     protected String cargo;
     protected float salario;
     LocalDateTime dataIngresso;
-    DateTimeFormatter formatter;
 
-    public Funcionario(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, int numCarteiraTrabalho, String rg, String sexo, String cargo, float salario) {
+    public Funcionario(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, String numCarteiraTrabalho, String rg, String sexo, String cargo, float salario) {
         super(CPF, nome, endereco, estadoCivil, dataNascimento);
         this.numCarteiraTrabalho = numCarteiraTrabalho;
         this.rg = rg;
@@ -19,10 +18,9 @@ public class Funcionario extends Pessoa{
         this.cargo = cargo;
         this.salario = salario;
         this.dataIngresso = LocalDateTime.now();
-        formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     }
 
-    public int getNumCarteiraTrabalho() {
+    public String getNumCarteiraTrabalho() {
         return numCarteiraTrabalho;
     }
 
@@ -43,11 +41,12 @@ public class Funcionario extends Pessoa{
     }
 
     public String getDataIngresso() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String data = dataIngresso.format(formatter);
         return data;
     }
 
-    public void setNumCarteiraTrabalho(int numCarteiraTrabalho) {
+    public void setNumCarteiraTrabalho(String numCarteiraTrabalho) {
         this.numCarteiraTrabalho = numCarteiraTrabalho;
     }
 
@@ -76,5 +75,11 @@ public class Funcionario extends Pessoa{
         if((dataIngresso.getYear() - dataAtual.getYear()) >= 15){
             this.salario = salario * 1.1f;
         }
+    }
+    public boolean comparaCPF(String cpf){
+        if(cpf.equals(this.CPF)){
+            return true;
+        }
+        return false;
     }
 }

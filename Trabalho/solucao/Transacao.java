@@ -1,7 +1,8 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 
-public class Transacao {
+public class Transacao implements Serializable{
     private LocalDateTime dataTransacao;
     private float valor;
     private String canal;
@@ -30,8 +31,10 @@ public class Transacao {
         this.dataTransacao = LocalDateTime.now();
     }
 
-    public LocalDateTime getDataTransacao() {
-        return dataTransacao;
+    public String getDataTransacao() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String data = dataTransacao.format(formatter);
+        return data;
     }
     public void setDataTransacao(LocalDateTime dataTransacao) {
         this.dataTransacao = dataTransacao;
@@ -64,5 +67,13 @@ public class Transacao {
     }
     public void setConta(Conta conta) {
         this.conta = conta;
+    }
+    public void mostrarTransacao()
+    {
+        System.out.println("Data da transação"+this.dataTransacao);
+        System.out.println("Valor da transação"+this.valor);
+        System.out.println("O canal da transacao é"+this.canal);
+        System.out.println("O tipo da transacao é"+this.tipo);
+        System.out.println("A conta é"+this.conta);
     }
 }
