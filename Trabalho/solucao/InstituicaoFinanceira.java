@@ -180,10 +180,25 @@ public class InstituicaoFinanceira {
                     if(validar == false)
                         System.out.println("CPF inválido, digite novamente");
                     }while (validar == false);*/
-                    Cliente dadosCliente = new Cliente(cpf, nome, endereco, ecivil, data, escolaridade);
-                    Clientes.add(dadosCliente);
-                    System.out.println("Cadastro realizado com sucesso");
-                    break;
+                    int cont = 0;
+                    do {
+                        try {
+                            valida.isCPF(cpf);
+                        } catch (CPFInvalidoException a) {
+                            System.out.println(a.getMessage());
+                        }
+                        cont++;
+                    } while (cont < 3 && valida.isCPF(cpf)==true );
+                    if(cont==3)
+                    {
+                        System.out.println("OPS, CPF digitado errado, ");
+                        break;
+                    }
+                        Cliente dadosCliente = new Cliente(cpf, nome, endereco, ecivil, data, escolaridade);
+                        Clientes.add(dadosCliente);
+                        System.out.println("Cadastro realizado com sucesso");
+                        break;
+
                 }
                 case 5: {
                     System.out.println("|Insira os dados da conta abaixo|");
@@ -200,6 +215,20 @@ public class InstituicaoFinanceira {
                     if(conjunta == 1) {
                         System.out.println("Digite o cpf do cliente 1:");
                         String cpf1 = sc.nextLine();
+                        int cont1 = 0;
+                        do {
+                            try {
+                                valida.isCPF(cpf1);
+                            } catch (CPFInvalidoException a) {
+                                System.out.println(a.getMessage());
+                            }
+                            cont1++;
+                        } while (cont1 < 3||valida.isCPF(cpf1)==true );
+                        if(cont1==3)
+                        {
+                            System.out.println("OPS, CPF digitado errado mais 3 vezes, ");
+                            break;
+                        }
                         for (Cliente item : Clientes){
                             if(item.getCPF().equals(cpf1)){
                                 clientes[0] = item;
@@ -211,6 +240,20 @@ public class InstituicaoFinanceira {
                         }
                         System.out.println("Digite o cpf do cliente 2:");
                         String cpf2 = sc.nextLine();
+                        int cont2 = 0;
+                        do {
+                            try {
+                                valida.isCPF(cpf2);
+                            } catch (CPFInvalidoException a) {
+                                System.out.println(a.getMessage());
+                            }
+                            cont2++;
+                        } while (cont2 < 3||valida.isCPF(cpf2)==true );
+                        if(cont2==3)
+                        {
+                            System.out.println("OPS, CPF digitado errado mais de 3 vezes");
+                            break;
+                        }
                         for (Cliente item : Clientes){
                             if(item.getCPF().equals(cpf2)){
                                 clientes[1] = item;
@@ -223,6 +266,20 @@ public class InstituicaoFinanceira {
                     }else if(conjunta == 2){
                         System.out.println("Digite o cpf do cliente:");
                         String cpf = sc.nextLine();
+                        int cont3 = 0;
+                        do {
+                            try {
+                                valida.isCPF(cpf);
+                            } catch (CPFInvalidoException a) {
+                                System.out.println(a.getMessage());
+                            }
+                            cont3++;
+                        } while (cont3 < 3||valida.isCPF(cpf)==true );
+                        if(cont3==3)
+                        {
+                            System.out.println("OPS, CPF digitado errado mais de 3 vezes");
+                            break;
+                        }
                         for (Cliente item : Clientes){
                             if(item.getCPF().equals(cpf)){
                                 clientes[0] = item;
@@ -326,7 +383,8 @@ public class InstituicaoFinanceira {
                                         System.out.println(e.getMessage());
                                     }catch (StatusInvalidoExcepetion a) {
                                         System.out.println(a.getMessage());
-                                    }
+                                    }//catch (SenhaInvalidaException b) {
+                                        //System.out.println(b.getMessage());
                                 }
                                 break;
                             }else if (resultado instanceof ContaCorrente){

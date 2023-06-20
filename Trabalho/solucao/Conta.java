@@ -184,8 +184,7 @@ public abstract class Conta implements Serializable {
             this.senha = senhaNova;
         }
         else {
-            System.out.println("ERRO: Senha errada");
-            // else exeception senha invalida
+                throw new SenhaInvalidaException("Senha inválida");
         }
     }
 
@@ -221,7 +220,11 @@ public abstract class Conta implements Serializable {
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); // else exception valor invalido (valor muito alto)
                 }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
-        } // else exception senha errada
+        }
+        else
+        {
+            throw new SenhaInvalidaException("Senha inválida");
+        }
     }
     public void deposita(int senha, String canal, float valor){
         if(senha==this.senha) {
@@ -232,7 +235,8 @@ public abstract class Conta implements Serializable {
                     this.transacoes.add(transacao);
                 }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!"); // else exception conta desativada
-        } // else exception senha errada
+        }
+        throw new SenhaInvalidaException("Senha Inválida");
     }
     public void consultaSaldo(int senha, String canal) {
         if (senha == this.senha) {
@@ -241,7 +245,8 @@ public abstract class Conta implements Serializable {
                 Transacao transacao = new Transacao(canal, "consulta_saldo", this);
                 this.transacoes.add(transacao);
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!"); // else exception conta desativada
-        } // else exception senha errada
+        }
+        throw new SenhaInvalidaException("Senha Inválida");
     }
     public void receberPagamento(float pagamento, String canal){
         if(status) {
@@ -260,9 +265,13 @@ public abstract class Conta implements Serializable {
                         Transacao transacao = new Transacao(valor, canal, "pagamento_conta", this);
                         this.transacoes.add(transacao);
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); // else exception valor invalido (valor muito alto)
-                } // else exception valor invalido (valor muito baixo)
+                }else throw new ValorInvalidoException("O valor não pode ser negativo");// else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
-        } // else exception senha errada
+        }
+        else
+        {
+            throw new SenhaInvalidaException("Senha invalida");
+        }
     }
     protected void getDados(){
         System.out.println("Status da conta" + status);
@@ -286,7 +295,7 @@ public abstract class Conta implements Serializable {
         }
         else
         {
-            // exception senha invalida
+            throw new SenhaInvalidaException("Senha Invalida");
         }
     }
     public void ativarConta(int senha){
