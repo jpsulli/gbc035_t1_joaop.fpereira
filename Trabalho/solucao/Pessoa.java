@@ -1,6 +1,6 @@
 import java.io.Serializable;
 
-public abstract class Pessoa implements Serializable {
+public abstract class Pessoa implements Serializable, Classificavel {
         protected String CPF;
         protected String nome;
         protected Endereco endereco;
@@ -49,4 +49,21 @@ public abstract class Pessoa implements Serializable {
         public void setDataNascimento(String dataNascimento) {
             this.dataNascimento = dataNascimento;
         }
-    }
+
+        public void mostrarPessoa(){
+            System.out.println("Nome: " + nome);
+            System.out.println("Data de nascimento: " + dataNascimento);
+            System.out.println("CPF: " + CPF);
+        }
+
+        public boolean eMenorQue (Classificavel o) {
+            Pessoa compara = (Pessoa) o;
+            String c = compara.getCPF();
+            if (CPF.compareTo(c) < 0) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+}

@@ -25,14 +25,13 @@ public class Transacao implements Serializable{
         this.conta = conta;
     }
 
-    public Transacao(Conta conta)
-    {
+    public Transacao(Conta conta) {
         this.conta = conta;
         this.dataTransacao = LocalDateTime.now();
     }
 
     public String getDataTransacao() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String data = dataTransacao.format(formatter);
         return data;
     }
@@ -68,12 +67,11 @@ public class Transacao implements Serializable{
     public void setConta(Conta conta) {
         this.conta = conta;
     }
-    public void mostrarTransacao()
-    {
-        System.out.println("Data da transação"+this.dataTransacao);
-        System.out.println("Valor da transação"+this.valor);
-        System.out.println("O canal da transacao é"+this.canal);
-        System.out.println("O tipo da transacao é"+this.tipo);
-        System.out.println("A conta é"+this.conta);
+
+    public void mostrarTransacao(){
+        System.out.println(this.tipo);
+        System.out.println("Data da transação: "+this.getDataTransacao());
+        System.out.println("Valor da transação: R$"+this.valor);
+        System.out.println("Canal da transacao: "+this.canal);
     }
 }

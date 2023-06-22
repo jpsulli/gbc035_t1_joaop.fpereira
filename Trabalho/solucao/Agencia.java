@@ -1,7 +1,8 @@
 import java.io.Serializable;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
-public class Agencia implements Serializable{
+public class Agencia implements Serializable, Classificavel{
     protected int numero;
     protected Endereco endereco;
     protected Gerente gerente;
@@ -69,5 +70,22 @@ public class Agencia implements Serializable{
     }
     public ArrayList<Funcionario> getFuncionarios() {
         return funcionarios;
+    }
+
+    public void mostrarAgencia(){
+        System.out.println("Numero da agencia: " + numero);
+        System.out.println("Nome da agencia: " + nome);
+        System.out.println("CEP: " + endereco.getCEP());
+    }
+
+    public boolean eMenorQue (Classificavel o) {
+        Agencia compara = (Agencia) o;
+        int c = compara.getNumeroAgencia();
+        if (this.numero < c) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

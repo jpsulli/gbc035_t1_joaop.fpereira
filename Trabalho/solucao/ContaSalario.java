@@ -14,7 +14,7 @@ public class ContaSalario extends Conta {
                 if (valor > 0) {
                     if (valor <= saldoAtual && valor <= limiteSaque) {
                         saldoAtual = saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "saque", this);
+                        Transacao transacao = new Transacao(valor, canal, "SAQUE", this);
                         this.transacoes.add(transacao);
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); //exception valor invalido (muito alto)
                 } else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!");// else exception valor invalido (muito baixo)
@@ -28,7 +28,7 @@ public class ContaSalario extends Conta {
                     if (valor <= saldoAtual && valor <= limiteTransferencia) {
                         conta.receberPagamento(valor, canal);
                         saldoAtual = saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "pagamento_conta", this);
+                        Transacao transacao = new Transacao(valor, canal, "PAGAMENTO CONTA", this);
                         this.transacoes.add(transacao);
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); //exception valor invalido (muito alto)
                 }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (muito baixo)
@@ -78,11 +78,14 @@ public class ContaSalario extends Conta {
         }
     }
 
-    public void mostrarDados(int senha) {
+    public void mostrarConta(int senha) {
         if(senha==this.senha) {
             getDados();
             System.out.println("O limite para saque e de " + limiteSaque);
             System.out.println("O limite para transferencia e de " + limiteTransferencia);
         } // else exception SenhaInvalidaException
+    }
+    public void descricaoConta() {
+        System.out.println("Conta Salario é uma conta destinada a receber o salario mensal do funcionario. Ela normalmente recebe apenas depositos do empregador");
     }
 }

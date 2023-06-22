@@ -4,8 +4,7 @@ import java.util.ArrayList;
 public class InstituicaoFinanceira {
     public static void main(String [] args){
         Scanner sc = new Scanner(System.in);
-        int op = 0, op2 = 0, op3 = 0, qtd = 0;
-        boolean condicao;
+        int op, op2;
         ArrayList<Conta> Contas;
         ArrayList<Funcionario> Funcionarios;
         ArrayList<Agencia> Agencias;
@@ -15,15 +14,29 @@ public class InstituicaoFinanceira {
         Funcionarios = (ArrayList<Funcionario>) Persist.recuperar("funcionarios.dat");
         Agencias = (ArrayList<Agencia>) Persist.recuperar("agencias.dat");
         Clientes = (ArrayList<Cliente>) Persist.recuperar("clientes.dat");
+
+        if(Contas == null){
+            Contas = new ArrayList<>();
+        }
+        if(Funcionarios == null){
+            Funcionarios = new ArrayList<>();
+        }
+        if(Agencias == null){
+            Agencias = new ArrayList<>();
+        }
+        if(Clientes == null){
+            Clientes = new ArrayList<>();
+        }
+
         ValidaCPF valida = new ValidaCPF();
-        boolean validar = false;
+
+        System.out.println("============== Bem vindo ao banco GJPW ================\n\n");
 
         do{
-            System.out.println("==============Bem vindo ao banco GJPW================\n"+
-                    "Menu do banco, deseja entrar como:\n\n" +
+            System.out.println("============== Menu do banco ==============\n\n" +
                     "1- Cadastrar Agencia\n"+
                     "2- Contratar Funcionario\n"+
-                    "3- Promover Funcionario\n"+
+                    "3- Associar Funcionarios\n"+
                     "4- Cadastrar Cliente\n"+
                     "5- Criar Conta\n"+
                     "6- Gerenciar Conta\n"+
@@ -31,6 +44,7 @@ public class InstituicaoFinanceira {
                     "Por favor,Digite o numero da operacao desejada:\n");
 
             op = sc.nextInt();
+            sc.nextLine();//LIBERA O BUFFER
 
             switch(op) {
                 case 1: {
@@ -40,9 +54,9 @@ public class InstituicaoFinanceira {
                     System.out.println("Digite o numero da agencia:");
                         int numero = sc.nextInt();
                         sc.nextLine();//LIBERA O BUFFER
-                    System.out.println("Digite a rua que se localizará a agencia:");
+                    System.out.println("Digite a rua que se localizara a agencia:");
                         String rua = sc.nextLine();
-                    System.out.println("Digite o numero da rua:");
+                    System.out.println("Digite o numero onde se localizara a agencia:");
                         String numrua = sc.nextLine();
                     System.out.println("Digite o bairro:");
                         String bairro = sc.nextLine();
@@ -52,27 +66,38 @@ public class InstituicaoFinanceira {
                         String estado = sc.nextLine();
                     System.out.println("Digite o cep:");
                         String cep = sc.nextLine();
-                    System.out.println("Cadastro realizado com sucesso");
+
                     Endereco endereco = new Endereco(rua, numrua, bairro, cidade, estado, cep);
 
                     Agencia ag = new Agencia(numero, endereco, nome);
+
                     Agencias.add(ag);
                     System.out.println("Cadastro realizado com sucesso");
                     break;
                 }
+
                 case 2: {
                     System.out.println("Para o cadastro de um funcionário, preencha os dados solicitados abaixo");
                     System.out.println("Digite o nome do funcionario:");
                         String nome = sc.nextLine();
-                    System.out.println("Digite o cpf do funcionario:");
-                        String cpf = sc.nextLine();
-                       /* validar = valida.isCPF(cpf);
-                        if(validar == false)
-                            System.out.println("CPF inválido, digite novamente");
-                        }while (validar == false);*/
+
+                    String cpf;
+                    int cont = 0;
+                    do {
+                        System.out.println("Digite o cpf do cliente:");
+                        cpf = sc.nextLine();
+                        if(!valida.isCPF(cpf)){
+                            System.out.println("CPF incorreto, digite novamente (maximo de 3 tentativas)");
+                            cont++;
+                        }
+                    } while (cont < 3 && !valida.isCPF(cpf));
+                    if(cont == 3){
+                        System.out.println("OPS, CPF digitado errado,operacao finalizada ");
+                        break;
+                    }
                     System.out.println("Digite a rua de residencia do funcionario:");
                         String rua = sc.nextLine();
-                    System.out.println("Digite o numero da rua:");
+                    System.out.println("Digite o numero da residencia:");
                         String numrua = sc.nextLine();
                     System.out.println("Digite o bairro:");
                         String bairro = sc.nextLine();
@@ -107,23 +132,24 @@ public class InstituicaoFinanceira {
                             float comissao = sc.nextFloat();
                             sc.nextLine();//limpar buffer
 
-                        Gerente dadosfunc = new Gerente(nome,cpf,enderecofunc,estadocivil,datanasc,numcarteiratrab,rg,sexo,cargo,salario, curso, comissao);
+                        Gerente dadosfunc = new Gerente(cpf,nome,enderecofunc,estadocivil,datanasc,numcarteiratrab,rg,sexo,cargo,salario, curso, comissao);
                         Funcionarios.add(dadosfunc);
                     }else{
-                        Funcionario dadosfunc = new Funcionario(nome,cpf,enderecofunc,estadocivil,datanasc,numcarteiratrab,rg,sexo,cargo,salario);
+                        Funcionario dadosfunc = new Funcionario(cpf,nome,enderecofunc,estadocivil,datanasc,numcarteiratrab,rg,sexo,cargo,salario);
                         Funcionarios.add(dadosfunc);
                     }
                     System.out.println("Cadastro realizado com sucesso");
                     break;
                 }
+
                 case 3: {
-                    System.out.println("|Insira o funcionario a ser promovido|");
-                    System.out.println("Digite o nome do funcionario: ");
-                    String nome = sc.nextLine();
+                    System.out.println("Para a associacao de um funcionario, preencha os dados solicitados abaixo\n");
+                    System.out.println("Digite o cpf do funcionario: ");
+                    String cpf = sc.nextLine();
 
                     Funcionario resultado = null;
                     for (Funcionario item : Funcionarios) {
-                        if (item.comparaCPF(nome)){
+                        if (item.comparaCPF(cpf)){
                             resultado = item;
                         }
                     }
@@ -131,31 +157,35 @@ public class InstituicaoFinanceira {
                         System.out.println("O funcionario escolhido não existe no cadastro");
                         break;
                     }
-                    else if(resultado instanceof Gerente){
-                        System.out.println("O funcionario escolhido já é um gerente");
-                        break;
-                    }
-                    else{
-                        System.out.println("Digite o curso feito pelo funcionario");
-                        String curso = sc.nextLine();
-                        System.out.println("Digite a comissao do novo gerente");
-                        float comissao = sc.nextFloat();
-                        sc.nextLine();//limpar buffer
 
-                        //terminar o codigo (promover funcionario)
-                        //verificar os ponteiros de onde o funcionario está e trocar para gerente
-                        //se o funcionario escolhido estiver em uma agencia com gerente, o q fazer?
-                        //se o funcionario escolhido estiver em uma agencia sem gerente, defini-lo como gerente da agencia
+                    System.out.println("Digite o numero da agencia a ser associada");
+                    int numagencia = sc.nextInt();
+                    sc.nextLine();//limpar buffer
+
+                    Agencia resultado2 = null;
+                    for (Agencia item : Agencias) {
+                        if (item.getNumeroAgencia() == numagencia){
+                            resultado2 = item;
+                        }
+                    }
+                    if(resultado2 == null){
+                        System.out.println("A agencia escolhida não existe no cadastro");
                         break;
                     }
+
+                    resultado2.setFuncionarios(resultado);
+
+                    System.out.println("Funcionario associado com sucesso");
+                    break;
                 }
+
                 case 4: {
-                    System.out.println("|Insira os dados do cliente abaixo|");
+                    System.out.println("Para cadastrar um cliente, insira os dados solicitados abaixo");
                     System.out.println("Digite o nome do cliente:");
                     String nome = sc.nextLine();
                     System.out.println("Digite a rua de residencia do cliente:");
                     String rua = sc.nextLine();
-                    System.out.println("Digite o numero da rua:");
+                    System.out.println("Digite o numero da residencia:");
                     String numrua = sc.nextLine();
                     System.out.println("Digite o bairro:");
                     String bairro = sc.nextLine();
@@ -173,33 +203,25 @@ public class InstituicaoFinanceira {
                     System.out.println("Digite a escolaridade do cliente:");
                     String escolaridade = sc.nextLine();
                     String cpf;
-                    System.out.println("Digite o cpf do cliente:");
-                    cpf = sc.nextLine();
-                    /*do {
-                    validar = valida.isCPF(cpf);
-                    if(validar == false)
-                        System.out.println("CPF inválido, digite novamente");
-                    }while (validar == false);*/
                     int cont = 0;
                     do {
-                        try {
-                            valida.isCPF(cpf);
-                        } catch (CPFInvalidoException a) {
-                            System.out.println(a.getMessage());
+                        System.out.println("Digite o cpf do cliente:");
+                        cpf = sc.nextLine();
+                        if(!valida.isCPF(cpf)){
+                            System.out.println("CPF incorreto, digite novamente (maximo de 3 tentativas)");
+                            cont++;
                         }
-                        cont++;
-                    } while (cont < 3 && valida.isCPF(cpf)==true );
-                    if(cont==3)
-                    {
-                        System.out.println("OPS, CPF digitado errado, ");
+                    } while (cont < 3 && !valida.isCPF(cpf));
+                    if(cont == 3){
+                        System.out.println("OPS, CPF digitado errado,operacao finalizada ");
                         break;
                     }
-                        Cliente dadosCliente = new Cliente(cpf, nome, endereco, ecivil, data, escolaridade);
-                        Clientes.add(dadosCliente);
-                        System.out.println("Cadastro realizado com sucesso");
-                        break;
-
+                    Cliente dadosCliente = new Cliente(cpf, nome, endereco, ecivil, data, escolaridade);
+                    Clientes.add(dadosCliente);
+                    System.out.println("Cadastro realizado com sucesso");
+                    break;
                 }
+
                 case 5: {
                     System.out.println("|Insira os dados da conta abaixo|");
                     System.out.println("Digite o numero da conta:");
@@ -213,20 +235,18 @@ public class InstituicaoFinanceira {
                     sc.nextLine();//limpar buffer
                     Cliente[] clientes = new Cliente[2];
                     if(conjunta == 1) {
-                        System.out.println("Digite o cpf do cliente 1:");
-                        String cpf1 = sc.nextLine();
-                        int cont1 = 0;
+                        String cpf1;
+                        int cont = 0;
                         do {
-                            try {
-                                valida.isCPF(cpf1);
-                            } catch (CPFInvalidoException a) {
-                                System.out.println(a.getMessage());
+                            System.out.println("Digite o cpf do cliente 1:");
+                            cpf1 = sc.nextLine();
+                            if(!valida.isCPF(cpf1)){
+                                System.out.println("CPF incorreto, digite novamente (maximo de 3 tentativas)");
+                                cont++;
                             }
-                            cont1++;
-                        } while (cont1 < 3||valida.isCPF(cpf1)==true );
-                        if(cont1==3)
-                        {
-                            System.out.println("OPS, CPF digitado errado mais 3 vezes, ");
+                        } while (cont < 3 && !valida.isCPF(cpf1));
+                        if(cont == 3){
+                            System.out.println("OPS, CPF digitado errado,operacao finalizada ");
                             break;
                         }
                         for (Cliente item : Clientes){
@@ -238,20 +258,18 @@ public class InstituicaoFinanceira {
                             System.out.println("Cliente não encontrado");
                             break;
                         }
-                        System.out.println("Digite o cpf do cliente 2:");
-                        String cpf2 = sc.nextLine();
-                        int cont2 = 0;
+                        String cpf2;
+                        int cont1 = 0;
                         do {
-                            try {
-                                valida.isCPF(cpf2);
-                            } catch (CPFInvalidoException a) {
-                                System.out.println(a.getMessage());
+                            System.out.println("Digite o cpf do cliente 2:");
+                            cpf2 = sc.nextLine();
+                            if(!valida.isCPF(cpf2)){
+                                System.out.println("CPF incorreto, digite novamente (maximo de 3 tentativas)");
+                                cont1++;
                             }
-                            cont2++;
-                        } while (cont2 < 3||valida.isCPF(cpf2)==true );
-                        if(cont2==3)
-                        {
-                            System.out.println("OPS, CPF digitado errado mais de 3 vezes");
+                        } while (cont1 < 3 && !valida.isCPF(cpf2));
+                        if(cont1 == 3){
+                            System.out.println("OPS, CPF digitado errado,operacao finalizada ");
                             break;
                         }
                         for (Cliente item : Clientes){
@@ -264,20 +282,18 @@ public class InstituicaoFinanceira {
                             break;
                         }
                     }else if(conjunta == 2){
-                        System.out.println("Digite o cpf do cliente:");
-                        String cpf = sc.nextLine();
-                        int cont3 = 0;
+                        String cpf;
+                        int cont = 0;
                         do {
-                            try {
-                                valida.isCPF(cpf);
-                            } catch (CPFInvalidoException a) {
-                                System.out.println(a.getMessage());
+                            System.out.println("Digite o cpf do cliente:");
+                            cpf = sc.nextLine();
+                            if(!valida.isCPF(cpf)){
+                                System.out.println("CPF incorreto, digite novamente (maximo de 3 tentativas)");
+                                cont++;
                             }
-                            cont3++;
-                        } while (cont3 < 3||valida.isCPF(cpf)==true );
-                        if(cont3==3)
-                        {
-                            System.out.println("OPS, CPF digitado errado mais de 3 vezes");
+                        } while (cont < 3 && !valida.isCPF(cpf));
+                        if(cont == 3){
+                            System.out.println("OPS, CPF digitado errado,operacao finalizada ");
                             break;
                         }
                         for (Cliente item : Clientes){
@@ -322,22 +338,37 @@ public class InstituicaoFinanceira {
                     }
                     break;
                 }
+
                 case 6: {
                     System.out.println("|Insira os dados da conta que voce quer gerenciar abaixo|");
                     System.out.println("Digite o numero da conta: ");
                     int numero = sc.nextInt();
+
+                    Conta resultado = null;
+                    for (Conta item : Contas) {
+                        if (item.ehIgualNum(numero)) {
+                            resultado = item;
+                        }
+                    }
+
+                    if(resultado == null){
+                        System.out.println("A conta escolhida nao existe no cadastro");
+                        break;
+                    }
+
                     System.out.println("Digite a senha da conta: ");
                     int senha = sc.nextInt();
                     sc.nextLine();//limpar buffer
 
-                    Conta resultado = null;
-                    for (Conta item : Contas) {
-                        if (item.comparaNum(numero)) {
-                            resultado = item;
-                        }
-                    }
-                    if(resultado == null){
-                        System.out.println("A conta escolhida não existe no cadastro");
+                    /*try{
+                    resultado.testarSenha(senha);
+                    * }catch{
+                    catch (SenhaInvalidoException e) {
+                                System.out.println(e.getMessage());
+                    }*/
+
+                    if(!resultado.testarSenha(senha)){
+                        System.out.println("Senha invalida!!!");
                         break;
                     }
 
@@ -350,8 +381,11 @@ public class InstituicaoFinanceira {
                         System.out.println("5. Imprimir extrato");
                         System.out.println("6. Mostrar dados da conta");
                         System.out.println("7. Desativar conta");
-                        System.out.println("8. Sair");
+                        System.out.println("8. Detalhes do tipo da conta");
+                        System.out.println("9. Sair");
                         System.out.println("Digite a opção desejada:");
+                        op2 = sc.nextInt();
+                        sc.nextLine();//limpar buffer
 
                         if(op2 == 1){
                             System.out.println("Digite o valor do saque:");
@@ -359,285 +393,124 @@ public class InstituicaoFinanceira {
                             sc.nextLine();//limpar buffer
                             int cont = 0;
                             boolean testsenha;
-                            if(resultado instanceof ContaPoupanca){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
+                            System.out.println("Digite o canal que esta sendo feita a transacao:");
+                            String canal = sc.nextLine();
+                            do{
+                                System.out.println("Digite a senha da conta novamente:");
+                                senha = sc.nextInt();
+                                sc.nextLine();//limpar buffer
+                                testsenha = resultado.testarSenha(senha);
+                                if(!testsenha){
+                                    System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
+                                    cont++;
                                 }
-                                else{
-                                    try{
-                                        ((ContaPoupanca) resultado).sacar(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }//catch (SenhaInvalidaException b) {
-                                        //System.out.println(b.getMessage());
-                                }
-                                break;
-                            }else if (resultado instanceof ContaCorrente){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaCorrente) resultado).sacar(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            } else if (resultado instanceof ContaSalario) {
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaSalario) resultado).sacar(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
+                            }while(cont < 3 && !testsenha);
+                            if(cont == 3){
+                                System.out.println("Senha incorreta, operacao finalizada");
                             }
-                            break;
+                            else{
+                                try{
+                                    resultado.sacar(senha,canal,valor);
+                                } catch (SaldoInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                }catch (StatusInvalidoExcepetion a) {
+                                    System.out.println(a.getMessage());
+                                }catch (SenhaInvalidaException b) {
+                                    //System.out.println(b.getMessage());
+                                }catch (ValorInvalidoException c) {
+                                    System.out.println(c.getMessage());
+                                }
+                            }
                         }
+
                         else if(op2 == 2){
                             System.out.println("Digite o valor do deposito:");
                             float valor = sc.nextFloat();
                             sc.nextLine();//limpar buffer
                             int cont = 0;
                             boolean testsenha;
-                            if(resultado instanceof ContaPoupanca){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaPoupanca) resultado).deposita(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            }else if (resultado instanceof ContaCorrente){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaCorrente) resultado).deposita(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            } else if (resultado instanceof ContaSalario) {
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaSalario) resultado).deposita(senha,canal,valor);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            }
-                            break;
-                        }
-                        else if(op2 == 3){
-                                System.out.println("|Insira os dados da conta para quem voce ira pagar|");
-                                System.out.println("Digite o numero da conta: ");
-                                int numero2 = sc.nextInt();
+                            System.out.println("Digite o canal que esta sendo feita a transacao:");
+                            String canal = sc.nextLine();
+                            do{
+                                System.out.println("Digite a senha da conta novamente:");
+                                senha = sc.nextInt();
                                 sc.nextLine();//limpar buffer
-                                Conta resultado2 = null;
-                                for (Conta item : Contas) {
-                                    if (item.comparaNum(numero2)) {
-                                        resultado2 = item;
-                                    }
+                                testsenha = resultado.testarSenha(senha);
+                                if(!testsenha){
+                                    System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
+                                    cont++;
                                 }
-                                if (resultado2 == null) {
-                                    System.out.println("A conta escolhida não existe no cadastro! Operacao finalizada");
-                                    break;
+                            }while(cont < 3 && !testsenha);
+                            if(cont == 3){
+                                System.out.println("Senha incorreta, operacao finalizada");
+                            }
+                            else{
+                                try{
+                                    resultado.deposita(senha,canal,valor);
+                                } catch (ValorInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                }catch (StatusInvalidoExcepetion a) {
+                                    System.out.println(a.getMessage());
+                                }catch (SenhaInvalidaException b) {
+                                    System.out.println(b.getMessage());
                                 }
+                            }
+                        }
+
+                        else if(op2 == 3){
+                            System.out.println("|Insira os dados da conta para quem voce ira pagar|");
+                            System.out.println("Digite o numero da conta: ");
+                            int numero2 = sc.nextInt();
+                            sc.nextLine();//limpar buffer
+                            if(numero == numero2){
+                                System.out.println("ERRO: Voce nao pode fazer um pagamento para si mesmo!");
+                                continue;
+                            }
+                            Conta resultado2 = null;
+                            for (Conta item : Contas) {
+                                if (item.ehIgualNum(numero2)) {
+                                    resultado2 = item;
+                                }
+                            }
+                            if (resultado2 == null) {
+                                System.out.println("A conta escolhida não existe no cadastro! Operacao finalizada");
+                                continue;
+                            }
                             System.out.println("Digite o valor da conta a ser paga:");
                             float valor = sc.nextFloat();
                             sc.nextLine();//limpar buffer
                             int cont = 0;
                             boolean testsenha;
-                            if(resultado instanceof ContaPoupanca){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
+                            System.out.println("Digite o canal que esta sendo feita a transacao:");
+                            String canal = sc.nextLine();
+                            do{
+                                System.out.println("Digite a senha da conta novamente:");
+                                senha = sc.nextInt();
+                                sc.nextLine();//limpar buffer
+                                testsenha = resultado.testarSenha(senha);
+                                if(!testsenha){
+                                    System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
+                                    cont++;
                                 }
-                                else{
-                                    try{
-                                        ((ContaPoupanca) resultado).pagamentoConta(senha,canal,valor,resultado2);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            }else if (resultado instanceof ContaCorrente){
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaCorrente) resultado).pagamentoConta(senha,canal,valor,resultado2); 
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
-                            } else if (resultado instanceof ContaSalario) {
-                                System.out.println("Digite o canal que esta sendo feita a transacao:");
-                                String canal = sc.nextLine();
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaSalario) resultado).pagamentoConta(senha,canal,valor,resultado2);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }catch (StatusInvalidoExcepetion a) {
-                                        System.out.println(a.getMessage());
-                                    }
-                                }
-                                break;
+                            }while(cont < 3 && !testsenha);
+                            if(cont == 3){
+                                System.out.println("Senha incorreta, operacao finalizada");
                             }
-                            break;
+                            else{
+                                try{
+                                    resultado.pagamentoConta(senha,canal,valor,resultado2);
+                                } catch (SaldoInvalidoException e) {
+                                    System.out.println(e.getMessage());
+                                }catch (StatusInvalidoExcepetion a) {
+                                    System.out.println(a.getMessage());
+                                }catch (SenhaInvalidaException c) {
+                                    System.out.println(c.getMessage());
+                                }catch (ValorInvalidoException d) {
+                                    System.out.println(d.getMessage());
+                                }
+                            }
                         }
+
                         else if (op2 == 4) {
                             boolean testsenha;
                             int cont = 0;
@@ -648,20 +521,27 @@ public class InstituicaoFinanceira {
                                 senha = sc.nextInt();
                                 sc.nextLine();//limpar buffer
                                 testsenha = resultado.testarSenha(senha);
-                                if(testsenha == false){
+                                if(!testsenha){
                                     System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
                                     cont++;
                                 }
-                            }while(cont < 3 || testsenha == false);
+                            }while(cont < 3 && !testsenha);
+
                             if(cont == 3){
                                 System.out.println("Senha incorreta, operacao finalizada");
-                                break;
                             }
                             else{
-                                resultado.consultaSaldo(senha,canal);
+                                try {
+                                    resultado.consultaSaldo(senha, canal);
+                                }catch (SenhaInvalidaException a) {
+                                    System.out.println(a.getMessage());
+                                }catch (StatusInvalidoExcepetion b){
+                                    System.out.println(b.getMessage());
+                                }
                             }
-                            break;
-                        } else if (op2 == 5) {
+                        }
+
+                        else if (op2 == 5) {
                             boolean testsenha;
                             int cont = 0;
                             do{
@@ -669,131 +549,146 @@ public class InstituicaoFinanceira {
                                 senha = sc.nextInt();
                                 sc.nextLine();//limpar buffer
                                 testsenha = resultado.testarSenha(senha);
-                                if(testsenha == false){
+                                if(!testsenha){
                                     System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
                                     cont++;
                                 }
-                            }while(cont < 3 || testsenha == false);
+                            }while(cont < 3 && !testsenha);
+
                             if(cont == 3){
                                 System.out.println("Senha incorreta, operacao finalizada");
-                                break;
                             }
                             else{
                                 resultado.extratotransacao(senha);
                             }
-                            break;
                         }
+
                         else if(op2 == 6){
                             int cont = 0;
                             boolean testsenha;
-                            if(resultado instanceof ContaPoupanca){
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
+                            do{
+                                System.out.println("Digite a senha da conta novamente:");
+                                senha = sc.nextInt();
+                                sc.nextLine();//limpar buffer
+                                testsenha = resultado.testarSenha(senha);
+                                if(!testsenha){
+                                    System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
+                                    cont++;
                                 }
-                                else{
-                                    try{
-                                        ((ContaPoupanca) resultado).mostrarDados(senha);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }
-                                break;
-                            }else if (resultado instanceof ContaCorrente){
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaCorrente) resultado).mostrarDados(senha);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }
-                                break;
-                            } else if (resultado instanceof ContaSalario) {
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
-                                }
-                                else{
-                                    try{
-                                        ((ContaSalario) resultado).mostrarDados(senha);
-                                    } catch (SaldoInvalidoException e) {
-                                        System.out.println(e.getMessage());
-                                    }
-                                }
-                                break;
+                            }while(cont < 3 && !testsenha);
+                            if(cont == 3){
+                                System.out.println("Senha incorreta, operacao finalizada");
                             }
-                            break;
-                        } else if (op2 == 7) {
+                            else{
+                                try{
+                                    resultado.mostrarConta(senha);
+                                } catch (SenhaInvalidaException b) {
+                                    System.out.println(b.getMessage());
+                                }
+                            }
+                        }
+
+                        else if (op2 == 7) {
                             int cont = 0;
                             boolean testsenha;
-                                do{
-                                    System.out.println("Digite a senha da conta novamente:");
-                                    senha = sc.nextInt();
-                                    sc.nextLine();//limpar buffer
-                                    testsenha = resultado.testarSenha(senha);
-                                    if(testsenha == false){
-                                        System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
-                                        cont++;
-                                    }
-                                }while(cont < 3 || testsenha == false);
-                                if(cont == 3){
-                                    System.out.println("Senha incorreta, operacao finalizada");
-                                    break;
+                            do{
+                                System.out.println("Digite a senha da conta novamente:");
+                                senha = sc.nextInt();
+                                sc.nextLine();//limpar buffer
+                                testsenha = resultado.testarSenha(senha);
+                                if(!testsenha){
+                                    System.out.println("Senha incorreta, digite novamente (maximo de 3 tentativas)");
+                                    cont++;
                                 }
-                                else {
+                            }while(cont < 3 && !testsenha);
+
+                            if(cont == 3){
+                                System.out.println("Senha incorreta, operacao finalizada");
+                            }
+                            else {
+                                try {
                                     resultado.desligarConta(senha);
+                                } catch (SenhaInvalidaException a){
+                                    System.out.println(a.getMessage());
                                 }
-                                break;
+                            }
                         }
-                        else if (op2 != 1 || op2 != 2 || op2 != 3 || op2 != 4 || op2 != 5 || op2 != 6 || op2 != 7) {
+                        else if(op2 == 8){
+                            resultado.descricaoConta();
+                        }
+                        else if (op2 != 9) {
                             System.out.println("Opcao invalida, digite uma opcao valida");
                         }
-                    }while(op2 != 8);
-                    break;
+                    }while(op2 != 9);
                 }
+
                 case 7: {
                     Persist.gravar(Contas, "contas.dat");
                     Persist.gravar(Clientes, "clientes.dat");
                     Persist.gravar(Funcionarios, "funcionarios.dat");
                     Persist.gravar(Agencias, "agencias.dat");
                     System.out.println("Obrigado por Usar o banco GJPW, volte sempre!!!");
+                    break;
+                }
+
+                default: {
+                    System.out.println("Opcao invalida, digite uma opcao valida");
+                    System.out.println();
                 }
             }
         }while(op != 7);
+
+        Agencia[] agen = Agencias.toArray(new Agencia[0]);
+        Funcionario[] func = Funcionarios.toArray(new Funcionario[0]);
+        Cliente[] clien = Clientes.toArray(new Cliente[0]);
+        Conta[] cont = Contas.toArray(new Conta[0]);
+
+        Classificador.ordena(agen);
+        Classificador.ordena(func);
+        Classificador.ordena(clien);
+        Classificador.ordena(cont);
+
+        System.out.println("\n\n<<<ArrayList de Agencias>>>\n");
+        for (Agencia item : Agencias){
+            item.mostrarAgencia();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Funcionarios>>>\n");
+        for (Funcionario item : Funcionarios){
+            item.mostrarPessoa();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Clientes>>>\n\n");
+        for(Cliente item : Clientes){
+            item.mostrarPessoa();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Contas>>>\n\n");
+        for(Conta item : Contas) {
+            item.getDados();
+            System.out.println();
+        }
+
+        System.out.println("\n\n<<<ArrayList de Agencias Ordenado>>>\n");
+        for(int i = 0; i < agen.length; i++){
+            agen[i].mostrarAgencia();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Clientes Ordenado>>>\n");
+        for(int i = 0; i < clien.length; i++){
+            clien[i].mostrarPessoa();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Funcionarios Ordenado>>>\n");
+        for(int i = 0; i < func.length; i++){
+            func[i].mostrarPessoa();
+            System.out.println();
+        }
+        System.out.println("\n\n<<<ArrayList de Contas Ordenado>>>\n");
+        for(int i = 0; i < cont.length; i++){
+            cont[i].getDados();
+            System.out.println();
+        }
     }
 }
 

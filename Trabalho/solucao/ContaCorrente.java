@@ -12,8 +12,8 @@ public class ContaCorrente extends Conta {
         if (senha == this.senha) {
             return limiteChequeEspecial;
         } else {
-            System.out.println("ERRO: Senha errada");
-            return -1;
+            throw new SenhaInvalidaException("Exception : Senha Inválida");
+            //return -1;
         }
     }
 
@@ -22,10 +22,10 @@ public class ContaCorrente extends Conta {
             if(limiteChequeEspecial > 0) {
                 this.limiteChequeEspecial = limiteChequeEspecial;
             }else{
-                System.out.println("ERRO: Valor inválido - muito baixo");
+                 throw new ValorInvalidoException("Valor invalido para a operacao!");
             }
         }else {
-            System.out.println("ERRO: Senha errada");
+            throw new SenhaInvalidaException("Exception : Senha Inválida");
         }
     }
 
@@ -33,8 +33,8 @@ public class ContaCorrente extends Conta {
         if (this.senha == senha) {
             return valorTaxaAdm;
         } else {
-            System.out.println("ERRO: Senha errada");
-            return -1;
+            throw new SenhaInvalidaException("Exception : Senha Inválida");
+            //return -1;
         }
     }
 
@@ -43,10 +43,10 @@ public class ContaCorrente extends Conta {
             if(valorTaxaAdm > 0) {
                 this.valorTaxaAdm = valorTaxaAdm;
             }else{
-                System.out.println("ERRO: Valor inválido - muito baixo");
+                 throw new ValorInvalidoException("Valor invalido para a operacao!");
             }
         }else {
-            System.out.println("ERRO: Senha errada");
+             throw new SenhaInvalidaException("Exception: Senha invalida!");
         }
     }
 
@@ -57,21 +57,21 @@ public class ContaCorrente extends Conta {
                 if (valor > 0) {
                     if (valor <= saldoAtual) {
                         saldoAtual = saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "saque", this);
+                        Transacao transacao = new Transacao(valor, canal, "SAQUE", this);
                         this.transacoes.add(transacao);
                     } else if (valor <= saldoAtual + limiteChequeEspecial) {
                         limiteChequeEspecial -= (valor - saldoAtual);
                         saldoAtual = 0;
-                        Transacao transacao = new Transacao(valor, canal, "saque", this);
+                        Transacao transacao = new Transacao(valor, canal, "SAQUE", this);
                         this.transacoes.add(transacao);
                     }
-                    throw new SaldoInvalidoException("Saldo insufiente para a operacao!"); //exception valor invalido (muito alto)
+                    else throw new SaldoInvalidoException("Saldo insufiente para a operacao!"); //exception valor invalido (muito alto)
                 }
-                throw new SaldoInvalidoException("Valor invalido para a operacao!"); //exception valor invalido (muito baixo)
+                else throw new ValorInvalidoException("Valor invalido para a operacao!"); //exception valor invalido (muito baixo)
             }
-            throw new StatusInvalidoExcepetion("A conta nao esta ativa para realizar esta operacao!"); //exception conta inativa
+            else throw new StatusInvalidoExcepetion("A conta nao esta ativa para realizar esta operacao!"); //exception conta inativa
         }
-        throw new SenhaInvalidaException("Senha invalida!");//exception senha invalida
+        else throw new SenhaInvalidaException("Exception: Senha invalida!");//exception senha invalida
     }
 
     @Override
@@ -82,25 +82,28 @@ public class ContaCorrente extends Conta {
                     if (valor <= saldoAtual) {
                         conta.receberPagamento(valor, canal);
                         saldoAtual = saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "pagamento_conta", this);
+                        Transacao transacao = new Transacao(valor, canal, "PAGAMENTO CONTA", this);
                         this.transacoes.add(transacao);
                     } else if (valor <= (saldoAtual + limiteChequeEspecial)) {
                         conta.receberPagamento(valor, canal);
                         limiteChequeEspecial -= (valor - saldoAtual);
                         saldoAtual = 0;
-                        Transacao transacao = new Transacao(valor, canal, "pagamento_conta", this);
+                        Transacao transacao = new Transacao(valor, canal, "PAGAMENTO CONTA", this);
                         this.transacoes.add(transacao);
                     } else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!");// else exception valor invalido (valor muito alto)
-                }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
+                }else throw new ValorInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
-        } // else exception senha errada
+        } else throw new SenhaInvalidaException("Exception: Senha invalida!");// else exception senha errada
     }
 
-    public void mostrarDados(int senha) {
+    public void mostrarConta(int senha) {
         if(senha == this.senha) {
             getDados();
             System.out.println("O limite do cheque especial eh" + limiteChequeEspecial);
             System.out.println("O valor da taxa Administrativa e de" + valorTaxaAdm);
-        } // else exception senha errada
+        }  else throw new SenhaInvalidaException("Exception: Senha invalida!");// else exception senha errada
+    }
+    public void descricaoConta(){
+        System.out.println("A chamada de Conta Corrente, diferente da conta poupança, tem como intuito de realizar muitas transacoes,sendo assim, perfeita para o dia a dia");
     }
 }

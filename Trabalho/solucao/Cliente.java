@@ -32,4 +32,10 @@ public class Cliente extends Pessoa {
     public void setContas(Conta conta) {
         this.contas.add(conta);
     }
+
+    @Override
+    public void mostrarPessoa(){
+        super.mostrarPessoa();
+        System.out.println("Escolaridade: " + Escolaridade);
+    }
 }

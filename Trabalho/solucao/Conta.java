@@ -3,7 +3,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 
-public abstract class Conta implements Serializable {
+public abstract class Conta implements Serializable, Classificavel {
     protected int senha;
     protected boolean status;
     protected Cliente[] clientes;
@@ -11,18 +11,18 @@ public abstract class Conta implements Serializable {
     protected int numConta;
     protected float saldoAtual;
     protected LocalDateTime dataAbertura;
-    protected LocalDateTime ultimaMovimentação;
+    protected LocalDateTime ultimaMovimentacao;
     protected int contadorcliente = 0;
 
     public Conta (int senha, Cliente[] clientes, int numConta, float saldo) {
         this.clientes = new Cliente[2];
         this.senha = senha;
         this.status = true;
-        this.transacoes = new ArrayList<Transacao>();
+        this.transacoes = new ArrayList<>();
         this.numConta = numConta;
         this.saldoAtual = saldo;
         this.dataAbertura = LocalDateTime.now();
-        this.ultimaMovimentação = LocalDateTime.now();
+        this.ultimaMovimentacao = LocalDateTime.now();
 
         for(int i = 0; i < 2; i++) {
             if(clientes[i] != null){
@@ -82,7 +82,7 @@ public abstract class Conta implements Serializable {
     }
     public String getDataAbertura(int senha) {
         if(senha == this.senha){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
             String data = dataAbertura.format(formatter);
             return data;
         }
@@ -93,8 +93,8 @@ public abstract class Conta implements Serializable {
     }
     public String getUltimaMovimentação(int senha) {
         if(senha == this.senha){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String lastop = ultimaMovimentação.format(formatter);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            String lastop = ultimaMovimentacao.format(formatter);
             return lastop;
         }
         else {
@@ -103,9 +103,9 @@ public abstract class Conta implements Serializable {
         }
     }
 
-    public void setUltimaMovimentação(int senha, LocalDateTime ultimaMovimentação) {
+    public void setUltimaMovimentação(int senha, LocalDateTime ultimaMovimentacao) {
         if(senha == this.senha)
-            this.ultimaMovimentação = ultimaMovimentação;
+            this.ultimaMovimentacao = ultimaMovimentacao;
         else {
             System.out.println("ERRO: Senha errada");
         }
@@ -143,7 +143,7 @@ public abstract class Conta implements Serializable {
             this.status = false;
         }
         else {
-            System.out.println("ERRO: Senha errada");
+            throw new SenhaInvalidaException("Senha inválida");
         }
     }
     public void setNumConta(int senha, int numConta) {
@@ -195,7 +195,7 @@ public abstract class Conta implements Serializable {
         return false;
     }
 
-    public boolean comparaNum(int num){
+    public boolean ehIgualNum(int num){
         if(num == numConta){
             return true;
         }
@@ -215,10 +215,10 @@ public abstract class Conta implements Serializable {
                 if (valor > 0) {
                     if (valor <= saldoAtual) {
                         saldoAtual = saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "saque", this);
+                        Transacao transacao = new Transacao(valor, canal, "SAQUE", this);
                         this.transacoes.add(transacao);
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); // else exception valor invalido (valor muito alto)
-                }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
+                }else throw new ValorInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
         }
         else
@@ -231,9 +231,9 @@ public abstract class Conta implements Serializable {
             if(status) {
                 if (valor > 0) {
                     saldoAtual = saldoAtual + valor;
-                    Transacao transacao = new Transacao(valor, canal, "deposito", this);
+                    Transacao transacao = new Transacao(valor, canal, "DEPOSITO", this);
                     this.transacoes.add(transacao);
-                }else throw new SaldoInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
+                }else throw new ValorInvalidoException("Exception: Valor invalido para operacao!"); // else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!"); // else exception conta desativada
         }
         throw new SenhaInvalidaException("Senha Inválida");
@@ -241,17 +241,16 @@ public abstract class Conta implements Serializable {
     public void consultaSaldo(int senha, String canal) {
         if (senha == this.senha) {
             if(status) {
-                System.out.println("Seu saldo e de" + saldoAtual);
-                Transacao transacao = new Transacao(canal, "consulta_saldo", this);
+                System.out.println("Seu saldo e de " + saldoAtual);
+                Transacao transacao = new Transacao(canal, "CONSULTA SALDO", this);
                 this.transacoes.add(transacao);
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!"); // else exception conta desativada
-        }
-        throw new SenhaInvalidaException("Senha Inválida");
+        }else throw new SenhaInvalidaException("Exception : Senha Inválida");
     }
     public void receberPagamento(float pagamento, String canal){
         if(status) {
             this.saldoAtual = this.saldoAtual + pagamento;
-            Transacao transacao = new Transacao(pagamento, canal, "receber_pagamento", this);
+            Transacao transacao = new Transacao(pagamento, canal, "RECEBE PAGAMENTO", this);
             this.transacoes.add(transacao);
         } else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
     }
@@ -262,19 +261,15 @@ public abstract class Conta implements Serializable {
                     if (valor < this.saldoAtual) {
                         conta.receberPagamento(valor, canal);
                         this.saldoAtual = this.saldoAtual - valor;
-                        Transacao transacao = new Transacao(valor, canal, "pagamento_conta", this);
+                        Transacao transacao = new Transacao(valor, canal, "PAGAMENTO CONTA", this);
                         this.transacoes.add(transacao);
                     }else throw new SaldoInvalidoException("Exception: Saldo insuficiente para operacao!"); // else exception valor invalido (valor muito alto)
                 }else throw new ValorInvalidoException("O valor não pode ser negativo");// else exception valor invalido (valor muito baixo)
             }else throw new StatusInvalidoExcepetion("Exception: Conta desativada, ative-a para realizar operacoes!");// else exception conta desativada
-        }
-        else
-        {
-            throw new SenhaInvalidaException("Senha invalida");
-        }
+        }else throw new SenhaInvalidaException("Senha invalida");
     }
     protected void getDados(){
-        System.out.println("Status da conta" + status);
+        System.out.println("Conta ativa: " + status);
         if (this.ehConjunta()) {
             System.out.println("Nome do cliente 1: " + clientes[0].getNome());
             System.out.println("Nome do cliente 2: " + clientes[1].getNome());
@@ -282,28 +277,55 @@ public abstract class Conta implements Serializable {
             System.out.println("Nome do cliente: " + clientes[0].getNome());
         }
         System.out.println("Numero da conta: " + numConta);
-        System.out.println("Data de abertura: " + dataAbertura);
-        System.out.println("Data da ultima movimentaçao: " + ultimaMovimentação);
-        System.out.println("Saldo Atual da conta: " + saldoAtual);
+        System.out.println("Data de abertura: " + getDataAbertura(senha));
+        System.out.println("Data da ultima movimentaçao: " + getUltimaMovimentação(senha));
+        System.out.println("Saldo Atual da conta: R$" + saldoAtual);
     }
-    public abstract void mostrarDados(int senha);
+
+    public abstract void mostrarConta(int senha);
+
+    public abstract void descricaoConta();
+
     public void extratotransacao(int senha) {
         if(senha==this.senha) {
+            System.out.println("");
             for(Transacao t : transacoes){
                 t.mostrarTransacao();
+                System.out.println("");
             }
         }
-        else
-        {
-            throw new SenhaInvalidaException("Senha Invalida");
+        else {
+            throw new SenhaInvalidaException("Exception : Senha Inválida");
         }
     }
+
     public void ativarConta(int senha){
         if(this.senha == senha){
             this.status = true;
         }
         else{
-            System.out.println("ERRO: Senha errada");
+            throw new SenhaInvalidaException("Exception : Senha Inválida");
+        }
+    }
+
+    public int comparaNum(int num){
+        if(num > numConta){
+            return -1;
+        }
+        else if(numConta > num){
+            return 1;
+        }
+        else
+            return 0;
+    }
+
+    public boolean eMenorQue (Classificavel o) {
+        Conta compara = (Conta) o;
+        if (compara.comparaNum(numConta) > 0) {
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }

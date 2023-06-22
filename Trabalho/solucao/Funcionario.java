@@ -8,7 +8,7 @@ public class Funcionario extends Pessoa{
     protected String sexo;
     protected String cargo;
     protected float salario;
-    LocalDateTime dataIngresso;
+    protected LocalDateTime dataIngresso;
 
     public Funcionario(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, String numCarteiraTrabalho, String rg, String sexo, String cargo, float salario) {
         super(CPF, nome, endereco, estadoCivil, dataNascimento);
@@ -41,7 +41,7 @@ public class Funcionario extends Pessoa{
     }
 
     public String getDataIngresso() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         String data = dataIngresso.format(formatter);
         return data;
     }
@@ -81,5 +81,15 @@ public class Funcionario extends Pessoa{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void mostrarPessoa(){
+        super.mostrarPessoa();
+        System.out.println("RG: " + rg);
+        System.out.println("Numero da carteira de trabalho: " + numCarteiraTrabalho);
+        System.out.println("Salario: R$" + salario);
+        System.out.println("Cargo: " + cargo);
+        System.out.println("Data de ingresso: " + getDataIngresso());
     }
 }

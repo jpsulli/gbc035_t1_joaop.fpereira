@@ -5,7 +5,7 @@ public class Gerente extends Funcionario
     private LocalDateTime dataingresso_gerencia;
     private Agencia agencia;
     private String curso_basico;
-    static float comissao;
+    private static float comissao = 10;
 
     public Gerente(String CPF, String nome, Endereco endereco, String estadoCivil, String dataNascimento, String numCarteiraTrabalho, String rg, String sexo, String cargo, float salario, Agencia agencia, String curso_basico, float comissao)
     {
@@ -63,5 +63,13 @@ public class Gerente extends Funcionario
     public void calculaSalario(float salario, float comissao)
     {
         this.salario = salario + salario*(comissao/100);
+    }
+
+    @Override
+    public void mostrarPessoa(){
+        super.mostrarPessoa();
+        System.out.println("Data de ingresso na gerencia"+ getDataingresso_gerencia());
+        System.out.println("Curso basico em gerencia: " + curso_basico);
+        System.out.println("Comissao: " + comissao+"%");
     }
 }
